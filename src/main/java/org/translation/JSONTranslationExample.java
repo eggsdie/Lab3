@@ -25,7 +25,7 @@ public class JSONTranslationExample {
             this.jsonArray = new JSONArray(jsonString);
         }
         catch (IOException | URISyntaxException ex) {
-            throw new RuntimeException(ex);
+            throw new RuntimeException("Error reading JSON file", ex);
         }
     }
 
@@ -34,7 +34,7 @@ public class JSONTranslationExample {
      * @return the Spanish translation of Canada
      */
     public String getCanadaCountryNameSpanishTranslation() {
-        // Use CANADA_INDEX instead of the magic number 30
+        // Using CANADA_INDEX instead of magic number 30
         JSONObject canada = jsonArray.getJSONObject(CANADA_INDEX);
         return canada.getString("es");
     }
@@ -46,23 +46,18 @@ public class JSONTranslationExample {
      * @return the translation of country to the given language or "Country not found" if there is no translation.
      */
     public String getCountryNameTranslation(String countryCode, String languageCode) {
-        String result = "Country not found";
-
-        // Iterate through the JSON array to find the country by code
         for (int i = 0; i < jsonArray.length(); i++) {
             JSONObject country = jsonArray.getJSONObject(i);
             // Assuming each country object has a "code" key with the three-letter country code
-            if (countryCode.equals(country.getString("code"))) {
+            if (countryCode.equalsIgnoreCase(country.getString("code"))) {
                 if (country.has(languageCode)) {
-                    result = country.getString(languageCode);
+                    return country.getString(languageCode);
+                } else {
+                    return "Translation not found for the specified language";
                 }
-                else {
-                    result = "Translation not found for the specified language";
-                }
-                break;
             }
         }
-        return result;
+        return "Country not found";
     }
 
     /**
@@ -72,8 +67,12 @@ public class JSONTranslationExample {
     public static void main(String[] args) {
         JSONTranslationExample jsonTranslationExample = new JSONTranslationExample();
 
-        System.out.println(jsonTranslationExample.getCanadaCountryNameSpanishTranslation());
-        String translation = jsonTranslationExample.getCountryNameTranslation("can", "es");
-        System.out.println(translation);
+        // Print Spanish translation for Canada
+        System.out.println("Spanish translation of Canada: "
+                + jsonTranslationExample.getCanadaCountryNameSpanishTranslation());
+
+        // Get country translation for Canada in Spanish
+        String translation = jsonTranslationExample.getCountryNameTranslation("CAN", "es");
+        System.out.println("Translation for CAN in es: " + translation);
     }
 }

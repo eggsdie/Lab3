@@ -9,7 +9,6 @@ import java.util.List;
  */
 public class InLabByHandTranslator implements Translator {
 
-    // Static variable definition should be at the top
     public static final String CANADA = "can";
 
     /**
@@ -52,25 +51,31 @@ public class InLabByHandTranslator implements Translator {
             return null;
         }
 
-        String translation = null;
+        // Use switch to reduce the number of return statements
         switch (language) {
-            case "de":
-                translation = "Kanada";
-                break;
+            case "de": return "Kanada";
             case "en":
-            case "fr":
-                translation = "Canada";
-                break;
-            case "zh":
-                translation = "加拿大";
-                break;
-            case "es":
-                translation = "Canadá";
-                break;
-            default:
-                translation = null;
+            case "fr": return "Canada";
+            case "zh": return "加拿大";
+            case "es": return "Canadá";
+            default: return null;
         }
-        return translation;
     }
 
+    /**
+     * Returns the language abbreviation based on the given language name.
+     * @param language the name of the language
+     * @return the abbreviation of the language or "Unknown Language" if not found
+     */
+    @Override
+    public String fromLanguage(String language) {
+        switch (language.toLowerCase()) {
+            case "german": return "de";
+            case "english": return "en";
+            case "french": return "fr";
+            case "chinese": return "zh";
+            case "spanish": return "es";
+            default: return "Unknown Language";
+        }
+    }
 }
